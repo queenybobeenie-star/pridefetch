@@ -1,4 +1,4 @@
-# Pridefetch 🌈
+# pridefetch 🌈
 
 A customizable, LGBTQ+ themed system information
 display built around Fastfetch.
