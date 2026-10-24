@@ -15,7 +15,7 @@ RESET='\033[0m'
 # Verify dependency
 if ! command -v fastfetch >/dev/null 2>&1; then
     echo "[ERROR] Fastfetch is required."
-    echo "Install it with your Linux package manager."
+    echo "Install it with your Linux package manager. for arch(for graclih cus no one le using this) sudo pacman -Syu fastfetch"
     exit 1
 fi
 
