@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+# PRIDEFETCH v1.0 // LGBTQ+ SYSTEM INTELLIGENCE
+
+set -u
+
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/pridefetch"
+CONFIG="$CONFIG_DIR/style"
+mkdir -p "$CONFIG_DIR"
+
+CYAN='\033[96m'
+PINK='\033[95m'
+GREEN='\033[92m'
+RESET='\033[0m'
+
+# Verify dependency
+if ! command -v fastfetch >/dev/null 2>&1; then
+    echo "[ERROR] Fastfetch is required."
+    echo "Install it with your Linux package manager."
+    exit 1
+fi
+
+# Theme selection
+if [[ "${1:-}" == "--change-style" ]]; then
+    rm -f "$CONFIG"
+    shift
+fi
+
+if [[ "${1:-}" == "--help" ]]; then
+    echo "Pridefetch commands:"
+    echo "  pridefetch                 Run"
+    echo "  pridefetch --change-style  Change theme"
+    echo "  pridefetch --help          Help"
+    exit 0
+fi
+
+if [[ ! -f "$CONFIG" ]]; then
+    printf "${CYAN}"
+    echo "╔══════════════════════════════════╗"
+    echo "║       WELCOME TO PRIDEFETCH      ║"
+    echo "╚══════════════════════════════════╝"
+    printf "${RESET}\n"
+
+    echo "Choose your identity aesthetic:"
+    echo "  1) Rainbow"
+    echo "  2) Transgender"
+    echo "  3) Bisexual"
+    echo "  4) Lesbian"
+    echo "  5) Non-binary"
+    echo "  6) Minimal / monochrome"
+    echo
+
+    while true; do
+        read -rp " [PRIDEFETCH] > " choice
+        case "$choice" in
+            1) style="rainbow"; break ;;
+            2) style="trans"; break ;;
+            3) style="bisexual"; break ;;
+            4) style="lesbian"; break ;;
+            5) style="nonbinary"; break ;;
+            6) style="minimal"; break ;;
+            *) echo "[!] Invalid selection." ;;
+        esac
+    done
+
+    printf '%s\n' "$style" > "$CONFIG"
+    chmod 600 "$CONFIG"
+fi
+
+style=$(<"$CONFIG")
+
+# Cyberpunk boot sequence
+printf "\n${PINK}[ BOOT ]${RESET} Initializing Pridefetch...\n"
+sleep 0.2
+printf "${CYAN}[ CORE ]${RESET} Loading theme: %s\n" "$style"
+sleep 0.2
+printf "${GREEN}[ OK ]${RESET} System interface online.\n\n"
+sleep 0.2
+
+# Theme colors
+case "$style" in
+    rainbow)
+        colors=(red yellow green cyan blue magenta)
+        ;;
+    trans)
+        colors=(cyan white magenta)
+        ;;
+    bisexual)
+        colors=(magenta blue cyan)
+        ;;
+    lesbian)
+        colors=(red white magenta)
+        ;;
+    nonbinary)
+        colors=(magenta white yellow)
+        ;;
+    minimal)
+        colors=(white)
+        ;;
+    *)
+        echo "[ERROR] Unknown theme. Run pridefetch --change-style"
+        exit 1
+        ;;
+esac
+
+# Use Fastfetch's real system detection
+args=()
+for i in "${!colors[@]}"; do
+    args+=(--logo-color-"$((i+1))" "${colors[$i]}")
+done
+
+printf "${CYAN}╭── PRIDEFETCH // SYSTEM SCAN ──╮${RESET}\n\n"
+
+fastfetch "${args[@]}" "$@"
